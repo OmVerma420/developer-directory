@@ -8,14 +8,13 @@ dotenv.config();
 
 const app = express();
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Connect to DB
+// Connect to DB only once
 connectDB();
 
 // Routes
 app.use("/developers", developerRoutes);
 
-
+export default app;
