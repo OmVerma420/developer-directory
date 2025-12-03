@@ -59,7 +59,7 @@ Follow these steps to set up the project locally.
 ### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/OmVerma420/developer-directory.git](https://github.com/OmVerma420/developer-directory.git)
+git clone https://github.com/OmVerma420/developer-directory.git
 cd developer-directory
 ```
 
@@ -115,7 +115,7 @@ This project is licensed under the ISC License. See the LICENSE file for more de
 Let's connect! You can find me on:
 
 - GitHub: [OmVerma420](https://github.com/OmVerma420)
-- LinkedIn: [Om Verma](https://linkedin.com/in/om-verma)
+- LinkedIn: [Om Verma](https://www.linkedin.com/in/om-verma-562b13258)
 
 ---
 
