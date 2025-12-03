@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const API = axios.create({
-  baseURL: "http://localhost:5000", // ← CHANGE ON PRODUCTION
+  baseURL: "https://developer-directory-blue.vercel.app/", // ← CHANGE ON PRODUCTION
 });
 
 // API Calls
