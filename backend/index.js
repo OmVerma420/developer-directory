@@ -9,10 +9,12 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
+app.use(
+  cors({
     origin: process.env.CORS_ORIGIN || "http://localhost:5173",
     credentials: true,
-}));
+  })
+);
 
 app.use(express.json());
 
@@ -23,6 +25,7 @@ app.use("/api/developers", developerRoutes);
 // Database connect
 connectDB();
 
+// 🚀 REQUIRED FOR VERCEL SERVERLESS DEPLOYMENT
 export default function handler(req, res) {
   return app(req, res);
 }
