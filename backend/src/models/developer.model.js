@@ -13,13 +13,32 @@ const developerSchema = new mongoose.Schema(
       required: true,
     },
     techStack: {
-      type: [String], // array of techs
+      type: [String],
       default: [],
     },
     experience: {
       type: Number,
       required: true,
       min: 0,
+    },
+    description: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    joiningDate: {
+      type: Date,
+      default: Date.now,
+    },
+    photoURL: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   { timestamps: true }

@@ -1,127 +1,128 @@
 import { useState } from "react";
-import { createDeveloper } from "../api/api";
+import { useDispatch } from "react-redux";
+import { createDeveloper } from "../features/developers/developerSlice";
 import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
-export default function DeveloperForm({ onAdd }) {
+export default function DeveloperForm() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     role: "",
     techStack: "",
     experience: "",
+    description: "",
   });
 
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [photo, setPhoto] = useState(null);
+  const [loading, setLoading] = useState(false); // 🔥 Loader state
 
   const validate = () => {
-    if (!form.name) return toast.error("Name is required!");
-    if (!form.role) return toast.error("Role is required!");
-    if (!form.experience || Number(form.experience) < 0)
-      return toast.error("Experience must be valid!");
+    if (form.name.trim().length < 2)
+      return toast.error("Name must be at least 2 characters");
+    if (!form.role) return toast.error("Role is required");
+    if (!form.techStack.trim()) return toast.error("Tech stack is required");
+    if (!form.experience) return toast.error("Experience is required");
+    if (isNaN(form.experience)) return toast.error("Experience must be a number");
+
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validate()) return;
 
-    setLoading(true);
+    setLoading(true); // 🔥 Show loader
 
-    try {
-      const payload = {
-        ...form,
-        experience: Number(form.experience),
-      };
+    const fd = new FormData();
+    fd.append("name", form.name);
+    fd.append("role", form.role);
+    fd.append("techStack", form.techStack);
+    fd.append("experience", form.experience);
+    fd.append("description", form.description);
+    if (photo) fd.append("photo", photo);
 
-      const { data } = await createDeveloper(payload);
-      toast.success("Developer added!");
+    const result = await dispatch(createDeveloper(fd));
 
-      onAdd(data.data);
-      setForm({ name: "", role: "", techStack: "", experience: "" });
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Error adding developer");
-    } finally {
-      setLoading(false);
+    setLoading(false); // 🔥 Hide loader
+
+    if (result.meta.requestStatus === "fulfilled") {
+      navigate("/developers");
     }
   };
 
   return (
-    <form
-      className="bg-white shadow-lg rounded-2xl p-6 md:p-8 space-y-5 border border-gray-100"
-      onSubmit={handleSubmit}
-    >
-      <h2 className="text-2xl font-bold tracking-tight text-gray-800">
-        Add Developer
-      </h2>
+    <div className="max-w-lg mx-auto p-6 bg-white shadow rounded-lg">
+      <h2 className="text-2xl font-bold mb-4">Add Developer</h2>
 
-      {/* Input Group */}
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-600">Name</label>
+      <form onSubmit={handleSubmit} className="space-y-4">
+
         <input
-          type="text"
-          name="name"
-          placeholder="Enter developer name"
+          className="border p-2 rounded w-full"
+          placeholder="Name"
           value={form.name}
-          onChange={handleChange}
-          className="w-full border border-gray-300 px-4 py-2.5 rounded-xl text-gray-800 
-                     focus:ring-2 focus:ring-black focus:outline-none transition-all"
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
         />
-      </div>
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-600">Role</label>
         <select
-          name="role"
+          className="border p-2 rounded w-full"
           value={form.role}
-          onChange={handleChange}
-          className="w-full border border-gray-300 px-4 py-2.5 rounded-xl text-gray-800
-                     bg-white focus:ring-2 focus:ring-black focus:outline-none transition-all"
+          onChange={(e) => setForm({ ...form, role: e.target.value })}
         >
-          <option value="">Select role</option>
-          <option value="Frontend">Frontend</option>
-          <option value="Backend">Backend</option>
-          <option value="Full-Stack">Full-Stack</option>
+          <option value="">Select Role</option>
+          <option>Frontend</option>
+          <option>Backend</option>
+          <option>Full-Stack</option>
         </select>
-      </div>
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-600">Tech Stack</label>
         <input
-          type="text"
-          name="techStack"
+          className="border p-2 rounded w-full"
           placeholder="React, Node, MongoDB"
           value={form.techStack}
-          onChange={handleChange}
-          className="w-full border border-gray-300 px-4 py-2.5 rounded-xl text-gray-800
-                     focus:ring-2 focus:ring-black focus:outline-none transition-all"
+          onChange={(e) => setForm({ ...form, techStack: e.target.value })}
         />
-      </div>
 
-      <div className="space-y-1">
-        <label className="text-sm font-medium text-gray-600">Experience</label>
         <input
           type="number"
-          name="experience"
-          placeholder="Years of experience"
+          className="border p-2 rounded w-full"
+          placeholder="Experience"
           value={form.experience}
-          onChange={handleChange}
-          className="w-full border border-gray-300 px-4 py-2.5 rounded-xl text-gray-800
-                     focus:ring-2 focus:ring-black focus:outline-none transition-all"
+          onChange={(e) => setForm({ ...form, experience: e.target.value })}
         />
-      </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-3 rounded-xl text-white font-semibold bg-black hover:bg-gray-900 
-                   transition-all disabled:opacity-60 shadow-md"
-      >
-        {loading ? "Saving..." : "Add Developer"}
-      </button>
-    </form>
+        <textarea
+          className="border p-2 rounded w-full"
+          placeholder="Description"
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          rows={3}
+        />
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setPhoto(e.target.files?.[0])}
+        />
+
+        {/* 🔥 BUTTON WITH LOADER */}
+        <button
+          className={`p-2 rounded w-full text-white font-medium
+            ${loading ? "bg-gray-700" : "bg-black hover:bg-gray-900"} 
+          `}
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-white border-t-transparent animate-spin rounded-full"></div>
+              Adding...
+            </span>
+          ) : (
+            "Add Developer"
+          )}
+        </button>
+      </form>
+    </div>
   );
 }

@@ -2,19 +2,27 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./src/utils/db.js";
-import developerRoutes from "./src/routes/routes.js";
+import authRoutes from "./src/routes/auth.routes.js";
+import developerRoutes from "./src/routes/developer.routes.js";
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    credentials: true,
+}));
+
 app.use(express.json());
 
-// Connect to DB only once
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/developers", developerRoutes); // ✅ FIXED
+
+// Database connect
 connectDB();
 
-// Routes
-app.use("/developers", developerRoutes);
+
 
 export default app;
