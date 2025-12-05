@@ -18,11 +18,11 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/developers", developerRoutes); // ✅ FIXED
+app.use("/api/developers", developerRoutes);
 
 // Database connect
 connectDB();
 
-
-
-export default app;
+export default function handler(req, res) {
+  return app(req, res);
+}
