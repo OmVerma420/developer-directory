@@ -1,6 +1,5 @@
 // controllers/developer.controller.js
-
-import { Developer } from "../models/Developer.model.js";
+import { Developer } from "../models/developer.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
