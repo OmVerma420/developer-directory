@@ -27,5 +27,4 @@ app.get("/", (req, res) => {
 // DB
 connectDB();
 
-
 export default app;
