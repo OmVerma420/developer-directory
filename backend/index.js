@@ -20,7 +20,6 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/developers", developerRoutes);
 
-// Optional root route
 app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
@@ -28,7 +27,6 @@ app.get("/", (req, res) => {
 // DB
 connectDB();
 
-// 🔥 Required for Vercel Serverless
-export default function handler(req, res) {
-  return app(req, res);
-}
+// ⭐ REQUIRED for Render deployment
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
