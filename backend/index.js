@@ -28,3 +28,4 @@ app.get("/", (req, res) => {
 connectDB();
 
 
+export default app;
