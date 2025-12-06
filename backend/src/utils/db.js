@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected ");
-  } catch (err) {
-    console.error("MongoDB Connection Failed ", err);
-    process.exit(1);
-  }
+    try {
+        const connectionInstance = await mongoose.connect(process.env.MONGODB_URI);
+        console.log(`\n MongoDB connected !! DB HOST: ${connectionInstance.connection.host}`);
+    } catch (error) {
+        console.error("MONGODB CONNECTION FAILED: ", error);
+        // Do not exit process in Serverless, just throw error so Vercel logs it
+        throw error;
+    }
 };
 
 export default connectDB;

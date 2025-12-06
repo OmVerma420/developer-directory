@@ -25,6 +25,12 @@ app.get("/", (req, res) => {
 });
 
 // DB
-connectDB();
+connectDB()
+  .then(() => {
+    console.log("Database connection established successfully.");
+  })
+  .catch((err) => {
+    console.error("Database connection failed in index.js:", err);
+  });
 
 export default app;
