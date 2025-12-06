@@ -21,7 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/developers", developerRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Backend is running 🚀");
+  res.send("Backend is running ");
 });
 
 // DB
