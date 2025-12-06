@@ -9,12 +9,10 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN || "*",
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || "*",
+  credentials: true,
+}));
 
 app.use(express.json());
 
@@ -22,8 +20,15 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/developers", developerRoutes);
 
-// Connect DB
+// Optional root route
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
+});
+
+// DB
 connectDB();
 
-// Export for Vercel
-export default app;
+// 🔥 Required for Vercel Serverless
+export default function handler(req, res) {
+  return app(req, res);
+}
